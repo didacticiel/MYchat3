@@ -1,20 +1,28 @@
 MYchat3
+
 Application de chat en temps réel utilisant Django
 Dernière mise à jour : 27 mars 2024
 
 La création d'une salle de chat est l'étape la plus basique pour la création de projets en temps réel et en direct. La page de chat que nous allons créer sera une simple structure HTML avec un titre h1 indiquant le nom de l'utilisateur actuel et un lien de déconnexion pour l'utilisateur connecté. Vous devrez peut-être commenter la ligne jusqu'à ce que nous créions un système d'authentification pour cela. Cela garantit que lorsque deux utilisateurs discutent, l'un peut se déconnecter sans affecter l'autre utilisateur. L'autre sera toujours connecté et pourra envoyer et recevoir des messages.
 
+
 Prérequis :
 Django
 Migrations Django
 Canal Django
+
+
 Introduction aux canaux Django et à la programmation asynchrone
+
 Les canaux sont le projet Python créé pour étendre la capacité de Django au niveau supérieur. Nous travaillions avec Django standard qui ne supportait pas les connexions asynchrones et via WebSockets pour créer des applications en temps réel. Les canaux étendent la capacité de Django au-delà de HTTP et le font fonctionner avec WebSockets, les protocoles de chat, les protocoles IoT, et plus encore. Il est construit sur le support ASGI qui signifie Asynchronous Server Gateway Interface. ASGI est le successeur de WSGI qui fournit une interface entre async et Python. Les canaux offrent la fonctionnalité d'ASGI en étendant WSGI, et ils offrent un support ASGI avec WSGI. Les canaux regroupent également l'architecture événementielle avec les couches de canaux, un système qui permet de communiquer facilement entre les processus et de séparer votre projet en différents processus.
+
+
 
 Étapes pour créer l'application de chat
 Étape 1 : Installer et configurer Django
 Étape 2 : Créer votre environnement virtuel.
 Étape 3 : Créer un projet Django nommé ChatApp. Pour créer le projet, écrivez la commande suivante dans votre terminal :
+
 
 
 
@@ -24,14 +32,17 @@ django-admin startproject ChatApp
 
 
 
+
 python -m pip install -U channels
 Note : À partir de la version 4.0.0 des canaux, ASGI runserver en mode développement ne fonctionne plus. Vous devrez également installer daphne.
 
 
 
 
+
 python -m pip install -U daphne
 Après avoir installé daphne, ajoutez-le à vos applications installées.
+
 
 
 
@@ -46,7 +57,11 @@ INSTALLED_APPS = [
     # ajouter django daphne
     'daphne',
 ]
+
+
 Étape 6 : Après avoir installé les canaux, ajoutez les canaux à vos applications installées. Cela permettra à Django de savoir que les canaux ont été introduits dans le projet et nous pourrons continuer.
+
+
 
 
 
@@ -61,8 +76,13 @@ INSTALLED_APPS = [
     # ajouter django channels
     'channels',
 ]
+
+
+
 Étape 7 : Définir l'application ASGI sur votre fichier ASGI par défaut dans le projet. Maintenant, exécutez le serveur, vous remarquerez que le serveur ASGI prendra la place du serveur Django et il prendra désormais en charge ASGI. Enfin, définissez votre paramètre ASGI_APPLICATION pour pointer vers cet objet de routage en tant qu'application racine :
 python
+
+
 
 
 
@@ -78,13 +98,17 @@ application = ProtocolTypeRouter({
     # Juste HTTP pour l'instant. (Nous pouvons ajouter d'autres protocoles plus tard.)
 })
 
+
 ASGI_APPLICATION = 'ChatApp.asgi.application'
 Pour exécuter le serveur, écrivez la commande suivante dans le terminal :
 
 
 
+
 python3 manage.py runserver
 Étape 8 : Créer une nouvelle application qui aura toute la fonctionnalité de chat. Pour créer une application, écrivez une commande dans le terminal :
+
+
 
 
 
@@ -100,6 +124,7 @@ Collez ce code dans votre fichier ChatApp/urls.py. Cela vous dirigera vers votre
 
 
 
+
 from django.contrib import admin
 from django.urls import path, include
 
@@ -108,6 +133,7 @@ urlpatterns = [
     path("", include("chat.urls")),
 ]
 Collez ce code dans votre fichier chat/urls.py. Cela vous dirigera vers les vues.
+
 
 
 
@@ -125,6 +151,7 @@ urlpatterns = [
     path("auth/logout/", LogoutView.as_view(), name="logout-user"),
 ]
 Collez ce code dans votre fichier views.py. Cela dirigera vos vues vers chatPage.html qui a été créé dans le dossier templates de l'application de chat.
+
 
 
 
